@@ -366,20 +366,18 @@ func (bot *bot) applyRecordToTable(ctx context.Context, issue *github.Issue, key
 }
 
 func (bot *bot) getRepositories(ctx context.Context, page, perPage int, affiliation string) error {
-	opt := &github.RepositoryListOptions{
-		Affiliation: affiliation,
-		ListOptions: github.ListOptions{
-			Page:    page,
-			PerPage: perPage,
-		},
+	
+	owner := "spotify"
+	
+	repoList := {
+		"web-api",
+		"web-playback-sdk",
+		"android-app-remote-sdk,
+		"ios-app-remote-sdk"
 	}
-	repos, resp, err := bot.ghClient.Repositories.List(ctx, "", opt)
-	if err != nil {
-		return err
-	}
-
-	for _, repo := range repos {
-		// logrus.Debugf("checking if %s is in (%s)", repo.GetOwner().GetLogin(), strings.Join(orgs, " | "))
+	
+	for _, r := range repoList {
+		repo, resp, err := bot.ghClient.Repositories.Get(ctx, owner, repo string)
 		if in(orgs, repo.GetOwner().GetLogin()) {
 			logrus.Debugf("getting issues for repo %s...", repo.GetFullName())
 			ipage := 0
